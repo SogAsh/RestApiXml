@@ -93,7 +93,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseData.cs" />
     <Compile Include="BaseMethods.cs" />
+    <Compile Include="GetObject.cs" />
     <Compile Include="Models\ShiftRequest.cs" />
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

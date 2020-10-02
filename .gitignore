@@ -1,0 +1,11 @@
+
+RestApiXml/.vs/RestApiXml/v16/.suo
+*.testlog
+RestApiXml/RestApiXml.sln.DotSettings.user
+*.tmp
+*.dll
+*.pdb
+*.txt
+*.cache
+*.dll
+*.pdb
