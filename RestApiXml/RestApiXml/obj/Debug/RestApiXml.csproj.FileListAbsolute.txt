@@ -42,8 +42,8 @@ E:\Работа\Workplace\RestApiXml\RestApiXml\RestApiXml\bin\Debug\System.Text
 E:\Работа\Workplace\RestApiXml\RestApiXml\RestApiXml\bin\Debug\System.Text.Json.xml
 E:\Работа\Workplace\RestApiXml\RestApiXml\RestApiXml\bin\Debug\System.Threading.Tasks.Extensions.xml
 E:\Работа\Workplace\RestApiXml\RestApiXml\RestApiXml\bin\Debug\System.ValueTuple.xml
-E:\Работа\Workplace\RestApiXml\RestApiXml\RestApiXml\obj\Debug\RestApiXml.csprojAssemblyReference.cache
 E:\Работа\Workplace\RestApiXml\RestApiXml\RestApiXml\obj\Debug\RestApiXml.csproj.CoreCompileInputs.cache
 E:\Работа\Workplace\RestApiXml\RestApiXml\RestApiXml\obj\Debug\RestApiXml.csproj.CopyComplete
 E:\Работа\Workplace\RestApiXml\RestApiXml\RestApiXml\obj\Debug\RestApiXml.dll
 E:\Работа\Workplace\RestApiXml\RestApiXml\RestApiXml\obj\Debug\RestApiXml.pdb
+E:\Работа\Workplace\RestApiXml\RestApiXml\RestApiXml\obj\Debug\RestApiXml.csprojAssemblyReference.cache

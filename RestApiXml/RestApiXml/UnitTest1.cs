@@ -4,6 +4,7 @@ using Rest_api_test_xml_1._1.Models;
 using RestSharp;
 using RestSharp.Serialization.Xml;
 using System.Threading.Tasks;
+using System;
 
 namespace Rest_api_test_xml_1._1
 
@@ -11,25 +12,232 @@ namespace Rest_api_test_xml_1._1
     [TestFixture]
     public partial class Test
     {
-        public static string RECORDdbId;
-        public static string RECORId;
+        public static string CompanyId;
+        public static string CompanyName;
 
-        public static RestClient client = new RestClient("https://localhost:60004/");
-        public static RestRequest request = new RestRequest("1c", Method.POST);
+        public static string DepartmentName;
+        public static string DepartmentId;
+
+        public static string ShiftName;
+        public static string ShiftDdid;
+        public static string ShiftId;
+
+        //public static RestClient client = new RestClient("https://localhost:60004/");
+        //public static RestRequest request = new RestRequest("1c", Method.POST);
 
         [SetUp]
         public async Task SetUp()
         {
             BaseMethods.DisableCheckCertificate();
+            //request.AddHeader("Accept", "application/xml");
+            //request.RequestFormat = DataFormat.Xml;
+        }
+
+        [Test]
+        public async Task RequestCompany()
+        {
+            var client = new RestClient("https://localhost:60004/");
+            var request = new RestRequest("1c", Method.POST);
+
             request.AddHeader("Accept", "application/xml");
             request.RequestFormat = DataFormat.Xml;
+
+            string rawXml = "<KRECEPT>" +
+                            "<REQUEST type = '6'>" +
+                            "<RECORD operation = '0'/>" +
+                            "</REQUEST>" +
+                            "</KRECEPT>";
+            request.AddParameter("application/xml", rawXml, ParameterType.RequestBody);
+
+            var response = await BaseMethods.GetResponse(client, request);
+
+            XmlAttributeDeserializer deserializer = new XmlAttributeDeserializer();
+            var result = deserializer.Deserialize<ShiftRequest.FIELD>(response);
+            var name = result.Name;
+
+            string actualtext = GetObject.GetCompany(name);
+            Assert.AreEqual(name, actualtext, "expected is not equal than actual");
         }
 
         [Test]
-        public async Task POSTAddShift()
+        public async Task AddCompany()
         {
-            string rawXml = "<KRECEPT><REQUEST type = '23'><RECORD operation = '1' name = '"
-                            + BaseData.shift + "'/></REQUEST></KRECEPT>";
+            var client = new RestClient("https://localhost:60004/");
+            var request = new RestRequest("1c", Method.POST);
+
+            request.AddHeader("Accept", "application/xml");
+            request.RequestFormat = DataFormat.Xml;
+            
+            BaseData randomShift = new BaseData();
+            string rawXml = "<KRECEPT>" +
+                            "<REQUEST type = '6'>" +
+                            "<RECORD operation = '1' name = '" + randomShift.word + "'/>"+
+                            "</REQUEST>"+
+                            "</KRECEPT>";
+            
+            CompanyName = randomShift.word;
+
+            request.AddParameter("application/xml", rawXml, ParameterType.RequestBody);
+
+            var response = await BaseMethods.GetResponse(client, request);
+
+            XmlAttributeDeserializer deserializer = new XmlAttributeDeserializer();
+            var result = deserializer.Deserialize<ShiftRequest.FIELD>(response);
+            var name = result.Name;
+            Assert.AreEqual(BaseData.FIELDname, name, "insert success");
+
+            var companyId = deserializer.Deserialize<ShiftRequest.RECORD>(response);
+            CompanyId = companyId.Id;
+
+            string actualtext = GetObject.GetCompany(randomShift.word);
+            Assert.AreEqual(randomShift.word, actualtext, "expected is not equal than actual");
+        }
+
+        [Test]
+        public async Task ChangeCompany()
+        {
+            AddCompany();
+
+            var client = new RestClient("https://localhost:60004/");
+            var request = new RestRequest("1c", Method.POST);
+
+            request.AddHeader("Accept", "application/xml");
+            request.RequestFormat = DataFormat.Xml;
+
+            BaseData randomShift = new BaseData();
+            string rawXml = "<KRECEPT>" +
+                            "<REQUEST type = '6'>" +
+                            "<RECORD operation = '2' id = '" + CompanyId + "' name = '" + randomShift.word + "'/>" +
+                            "</REQUEST>" +
+                            "</KRECEPT>";
+
+            request.AddParameter("application/xml", rawXml, ParameterType.RequestBody);
+
+            var response = await BaseMethods.GetResponse(client, request);
+
+            XmlAttributeDeserializer deserializer = new XmlAttributeDeserializer();
+            var result = deserializer.Deserialize<ShiftRequest.FIELD>(response);
+            var name = result.Name;
+            Assert.AreEqual(BaseData.FIELDname, name, "insert success");
+
+            var result2 = deserializer.Deserialize<ShiftRequest.RECORD>(response);
+
+            string actualtext = GetObject.GetCompany(randomShift.word);
+            Assert.AreEqual(randomShift.word, actualtext, "expected is not equal than actual");
+        }
+        
+        [Test]
+        public async Task DeleteCompany()
+        {
+            AddCompany();
+
+            var client = new RestClient("https://localhost:60004/");
+            var request = new RestRequest("1c", Method.POST);
+
+            request.AddHeader("Accept", "application/xml");
+            request.RequestFormat = DataFormat.Xml;
+
+            BaseData randomShift = new BaseData();
+            string rawXml = "<KRECEPT>" +
+                            "<REQUEST type = '6'>" +
+                            "<RECORD operation = '3' id = '" + CompanyId + "'/>" +
+                            "</REQUEST>" +
+                            "</KRECEPT>";
+
+            request.AddParameter("application/xml", rawXml, ParameterType.RequestBody);
+
+            var response = await BaseMethods.GetResponse(client, request);
+
+            XmlAttributeDeserializer deserializer = new XmlAttributeDeserializer();
+            var result = deserializer.Deserialize<ShiftRequest.FIELD>(response);
+            var name = result.Name;
+            Assert.AreEqual(BaseData.FIELDname, name, "insert success");
+
+            string actualtext = GetObject.GetDeletedCompany(CompanyName);
+            Assert.AreNotEqual(CompanyName, actualtext, "expected is not equal than actual");
+        }
+
+        [Test]
+        public async Task RequestDepartment()
+        {
+            var client = new RestClient("https://localhost:60004/");
+            var request = new RestRequest("1c", Method.POST);
+
+            request.AddHeader("Accept", "application/xml");
+            request.RequestFormat = DataFormat.Xml;
+
+            string rawXml = "<KRECEPT>" +
+                            "<REQUEST type = '8'>" +
+                            "<RECORD operation = '0'/>" +
+                            "</REQUEST>" +
+                            "</KRECEPT>";
+            request.AddParameter("application/xml", rawXml, ParameterType.RequestBody);
+
+            var response = await BaseMethods.GetResponse(client, request);
+
+            XmlAttributeDeserializer deserializer = new XmlAttributeDeserializer();
+            var result = deserializer.Deserialize<ShiftRequest.FIELD>(response);
+            var name = result.Name;
+
+            string actualtext = GetObject.GetDepartment(name);
+            Assert.AreEqual(name, actualtext, "expected is not equal than actual");
+        }
+
+        [Test]
+        public async Task AddDepartment()
+        {
+            AddCompany();
+
+            var client = new RestClient("https://localhost:60004/");
+            var request = new RestRequest("1c", Method.POST);
+
+            request.AddHeader("Accept", "application/xml");
+            request.RequestFormat = DataFormat.Xml;
+
+            BaseData randomShift = new BaseData();
+            string rawXml = "<KRECEPT>" +
+                            "<REQUEST type = '8'>" +
+                            "<RECORD operation = '1' name = '" + randomShift.word + "' org_id = '" + CompanyId +"'/>" +
+                            "</REQUEST>" +
+                            "</KRECEPT>";
+                
+            DepartmentName = randomShift.word;
+
+            request.AddParameter("application/xml", rawXml, ParameterType.RequestBody);
+
+            var response = await BaseMethods.GetResponse(client, request);
+
+            XmlAttributeDeserializer deserializer = new XmlAttributeDeserializer();
+            var result = deserializer.Deserialize<ShiftRequest.FIELD>(response);
+            var name = result.Name;
+            Assert.AreEqual(BaseData.FIELDname, name, "insert success");
+
+            var companyId = deserializer.Deserialize<ShiftRequest.RECORD>(response);
+            DepartmentId = companyId.Id;
+
+            string actualtext = GetObject.GetCompany(randomShift.word);
+            Assert.AreEqual(randomShift.word, actualtext, "expected is not equal than actual");
+        }
+
+        //--------------------------------------------------------------------------------------------------
+        [Test]
+        public async Task AddShift()
+        {
+            var client = new RestClient("https://localhost:60004/");
+            var request = new RestRequest("1c", Method.POST);
+
+            request.AddHeader("Accept", "application/xml");
+            request.RequestFormat = DataFormat.Xml;
+
+            BaseData randomShift = new BaseData();
+
+            string rawXml = "<KRECEPT>" +
+                            "<REQUEST type = '23'>" +
+                            "<RECORD operation = '1' name = '"
+                            + randomShift.word + "'/>" +
+                            "</REQUEST></KRECEPT>";
+
+            ShiftName = randomShift.word;
 
             request.AddParameter("application/xml", rawXml, ParameterType.RequestBody);
 
@@ -40,43 +248,31 @@ namespace Rest_api_test_xml_1._1
             var name = result.Name;
 
             var resultNext = deserializer.Deserialize<ShiftRequest.RECORD>(response);
-            RECORDdbId = resultNext.Dbid;
-            RECORId = resultNext.Id;
+            ShiftDdid = resultNext.Dbid;
+            ShiftId = resultNext.Id;
 
             Assert.AreEqual(BaseData.FIELDname, name, "insert success");
 
-            string actualtext = GetObject.GetShift(BaseData.shift);
-            Assert.AreEqual(BaseData.shift, actualtext, "expected is not equal than actual");
+            string actualtext = GetObject.GetShift(randomShift.word);
+            Assert.AreEqual(randomShift.word, actualtext, "expected is not equal than actual");
         }
 
         [Test]
-        public async Task POSTRequestShift()
+        public async Task RequestShift()
         {
-            POSTAddShift();
+            var client = new RestClient("https://localhost:60004/");
+            var request = new RestRequest("1c", Method.POST);
 
-            string rawXml = "<KRECEPT><REQUEST type = '23'><RECORD operation = '0'/></REQUEST></KRECEPT>";
-            request.AddParameter("application/xml", rawXml, ParameterType.RequestBody);
-            
-            var response = await BaseMethods.GetResponse(client, request);
+            request.AddHeader("Accept", "application/xml");
+            request.RequestFormat = DataFormat.Xml;
 
-            XmlAttributeDeserializer deserializer = new XmlAttributeDeserializer();
-            var result = deserializer.Deserialize<ShiftRequest.FIELD>(response);
-            var name = result.Name;
+            AddShift();
 
-            var resultNext = deserializer.Deserialize<ShiftRequest.RECORD>(response);
-            var dbid = resultNext.Dbid;
-
-            Assert.AreEqual(BaseData.FIELDname, name, "insert success");
-            //Assert.AreEqual(RECORDdbId, dbid, "insert success"); валится потому что почемуто создаются две смены
-        }
-
-        [Test]
-        public async Task POSTDeleteShift() //Добавляет смену вместо того, чтобы удалить
-        {
-            POSTAddShift();
-
-            string rawXml = "<KRECEPT><REQUEST type = '23'><RECORD operation = '3' name = '" + RECORId + "'/></REQUEST></KRECEPT>";
-
+            string rawXml = "<KRECEPT>" +
+                            "<REQUEST type = '23'>" +
+                            "<RECORD operation = '0'/>" +
+                            "</REQUEST>" +
+                            "</KRECEPT>";
             request.AddParameter("application/xml", rawXml, ParameterType.RequestBody);
 
             var response = await BaseMethods.GetResponse(client, request);
@@ -85,57 +281,69 @@ namespace Rest_api_test_xml_1._1
             var result = deserializer.Deserialize<ShiftRequest.FIELD>(response);
             var name = result.Name;
 
+            string actualtext = GetObject.GetShift(name);
+            Assert.AreEqual(name, actualtext, "expected is not equal than actual");
+        }
+
+        [Test]
+        public async Task ChangeShift() 
+        {
+            var client = new RestClient("https://localhost:60004/");
+            var request = new RestRequest("1c", Method.POST);
+
+            request.AddHeader("Accept", "application/xml");
+            request.RequestFormat = DataFormat.Xml;
+
+            AddShift();
+            BaseData randomShift = new BaseData();
+            string rawXml = "<KRECEPT>" +
+                            "<REQUEST type = '23'>" +
+                            "<RECORD operation = '2' id = '" + ShiftId + "' name = '" + randomShift.word + "'/>" +
+                            "</REQUEST>" +
+                            "</KRECEPT>";
+            request.AddParameter("application/xml", rawXml, ParameterType.RequestBody);
+
+            var response = await BaseMethods.GetResponse(client, request);
+
+            XmlAttributeDeserializer deserializer = new XmlAttributeDeserializer();
+            var result = deserializer.Deserialize<ShiftRequest.FIELD>(response);
+            var name = result.Name;
+
             Assert.AreEqual(BaseData.FIELDname, name, "insert success");
+
+            string actualtext = GetObject.GetShift(randomShift.word);
+            Assert.AreEqual(randomShift.word, actualtext, "expected is not equal than actual");
         }
-
-
-
-
-        /* Синхронные методы - не решают проблемы
+        
         [Test]
-        public void POSTAddShift()
+        public async Task DeleteShift()
         {
-            string rawXml = "<KRECEPT><REQUEST type = '23'><RECORD operation = '1' name = '" + BaseData.shift + "'/></REQUEST></KRECEPT>";
+            var client = new RestClient("https://localhost:60004/");
+            var request = new RestRequest("1c", Method.POST);
 
-            request.AddParameter("application/xml", rawXml, ParameterType.RequestBody);
+            request.AddHeader("Accept", "application/xml");
             request.RequestFormat = DataFormat.Xml;
 
-            var response = client.ExecuteAsync(request);
+            AddShift();
 
-            XmlAttributeDeserializer deserializer = new XmlAttributeDeserializer();
-            var result = deserializer.Deserialize<ShiftRequest.FIELD>(response.Result);
-            var name = result.Name;
-
-            var resultNext = deserializer.Deserialize<ShiftRequest.RECORD>(response.Result);
-            RECORDdbId = resultNext.Dbid;
-
-            //Assert.AreEqual(BaseData.FIELDname, name, "insert success");
-
-            //string actualtext = GetObject.GetShift(BaseData.shift);
-            //Assert.AreEqual(BaseData.shift, actualtext, "expected is not equal than actual");
-        }
-
-        [Test]
-        public void POSTRequestShift()
-        {
-            POSTAddShift();
-
-            string rawXml = "<KRECEPT><REQUEST type = '23'><RECORD operation = '0'/></REQUEST></KRECEPT>";
-            
+            string rawXml = "<KRECEPT>" +
+                            "<REQUEST type = '23'>" +
+                            "<RECORD operation = '3' id = '" + ShiftId + "'/>" +
+                            "</REQUEST>" +
+                            "</KRECEPT>";
             request.AddParameter("application/xml", rawXml, ParameterType.RequestBody);
-            request.RequestFormat = DataFormat.Xml;
 
-            var response = client.ExecuteAsync(request);
+            var response = await BaseMethods.GetResponse(client, request);
 
             XmlAttributeDeserializer deserializer = new XmlAttributeDeserializer();
-            var result = deserializer.Deserialize<ShiftRequest.FIELD>(response.Result);
+            var result = deserializer.Deserialize<ShiftRequest.FIELD>(response);
             var name = result.Name;
 
-            var resultNext = deserializer.Deserialize<ShiftRequest.RECORD>(response.Result);
-            var dbid = resultNext.Dbid;
+            Assert.AreEqual(BaseData.FIELDname, name, "insert success");
 
-            //Assert.AreEqual(RECORDdbId, dbid, "insert success");
+            string actualtext = GetObject.GetDeletedShift(ShiftName);
+            Assert.AreNotEqual(ShiftName, actualtext, "expected is not equal than actual");
         }
-        */
+
     }
 }

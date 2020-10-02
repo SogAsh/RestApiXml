@@ -7,6 +7,24 @@ namespace Rest_api_test_xml_1._1
 {
 	public class GetObject
 	{
+        public static string GetCompany(string dbValue) //get name of Company
+        {
+            string returnQuery = BaseMethods.GetDataFromDb("select dep_name from firmnum where dep_name = '" + dbValue + "'");
+            if (returnQuery == string.Empty)
+            {
+                Console.WriteLine("Query error! Result is empty! See in 'class GetObject'");
+				Assert.Fail();
+				
+            }
+            return returnQuery;
+        }
+
+        public static string GetDeletedCompany(string dbValue) //get name of Company
+        {
+            string returnQuery = BaseMethods.GetDataFromDb("select dep_name from firmnum where dep_name = '" + dbValue + "'");
+            return returnQuery;
+        }
+
 		public static string GetShift(string dbValue)
 		{
 			string returnQuery = BaseMethods.GetDataFromDb("select name from calendar_shift where name = '" + dbValue + "'");
@@ -18,157 +36,157 @@ namespace Rest_api_test_xml_1._1
 			return returnQuery;
 		}
 
-		#region MyRegion
-		/*
-		public static string GetDeletedCompany(string dbValue) //get name of Company
+        public static string GetDeletedShift(string dbValue) //get name of Shift
 		{
-			string returnQuery = BaseMethods.GetDataFromDb("select dep_name from firmnum where dep_name = '" + dbValue + "'");
-			return returnQuery;
-		}
+            string returnQuery = BaseMethods.GetDataFromDb("select name from calendar_shift where name = '" + dbValue + "'");
+            return returnQuery;
+        }
+		
+        public static string GetDepartment(string dbValue) //get name of Department
+        {
+            string returnQuery = BaseMethods.GetDataFromDb("select dep_name from departnum where dep_name = '" + dbValue + "'");
+            if (returnQuery == string.Empty)
+            {
+                Assert.Fail();
+            }
+            return returnQuery;
+        }
 
-		public static string GetDepartment(string dbValue) //get name of Department
-		{
-			string returnQuery = BaseMethods.GetDataFromDb("select dep_name from departnum where dep_name = '" + dbValue + "'");
-			if (returnQuery == string.Empty)
-			{
-				Assert.Fail();
-			}
-			return returnQuery;
-		}
+        public static string GetDeletedDepartment(string dbValue) //get name of Department
+        {
+            string returnQuery = BaseMethods.GetDataFromDb("select dep_name from departnum where dep_name = '" + dbValue + "'");
+            return returnQuery;
+        }
 
-		public static string GetDeletedDepartment(string dbValue) //get name of Department
-		{
-			string returnQuery = BaseMethods.GetDataFromDb("select dep_name from departnum where dep_name = '" + dbValue + "'");
-			return returnQuery;
-		}
+        #region MyRegion
+        /*
+        public static string GetEmployee(string dbValue) //get name of Employee
+        {
+            BaseMethods.ExecuteSqlQuery("workernumactual.sql");
 
-		public static string GetEmployee(string dbValue) //get name of Employee
-		{
-			BaseMethods.ExecuteSqlQuery("workernumactual.sql");
+            string returnQuery = BaseMethods.GetDataFromDb("select worker_name from workernumactual where worker_name = '" + dbValue + "'");
+            if (returnQuery == string.Empty)
+            {
+                Assert.Fail();
+            }
+            return returnQuery;
+        }
 
-			string returnQuery = BaseMethods.GetDataFromDb("select worker_name from workernumactual where worker_name = '" + dbValue + "'");
-			if (returnQuery == string.Empty)
-			{
-				Assert.Fail();
-			}
-			return returnQuery;
-		}
+        public static string GetEmployeeId(string dbValue) //get name of Employee
+        {
+            BaseMethods.ExecuteSqlQuery("workernumactual.sql");
 
-		public static string GetEmployeeId(string dbValue) //get name of Employee
-		{
-			BaseMethods.ExecuteSqlQuery("workernumactual.sql");
+            string returnQuery = BaseMethods.GetDataFromDb("select worker_id from workernumactual where worker_id = '" + dbValue + "'");
+            if (returnQuery == string.Empty)
+            {
+                Assert.Fail();
+            }
+            return returnQuery;
+        }
 
-			string returnQuery = BaseMethods.GetDataFromDb("select worker_id from workernumactual where worker_id = '" + dbValue + "'");
-			if (returnQuery == string.Empty)
-			{
-				Assert.Fail();
-			}
-			return returnQuery;
-		}
+        public static string GetDeletedEmployee(string dbValue) //get name of deleted Employee
+        {
+            BaseMethods.ExecuteSqlQuery("workernumactual.sql");
 
-		public static string GetDeletedEmployee(string dbValue) //get name of deleted Employee
-		{
-			BaseMethods.ExecuteSqlQuery("workernumactual.sql");
+            string returnQuery = BaseMethods.GetDataFromDb("select worker_name from workernumactual where worker_name = '" + dbValue + "'");
+            return returnQuery;
+        }
 
-			string returnQuery = BaseMethods.GetDataFromDb("select worker_name from workernumactual where worker_name = '" + dbValue + "'");
-			return returnQuery;
-		}
+        public static string GetEmployeeSum() //get name of Employee
+        {
+            BaseMethods.ExecuteSqlQuery("workernumactual.sql");
 
-		public static string GetEmployeeSum() //get name of Employee
-		{
-			BaseMethods.ExecuteSqlQuery("workernumactual.sql");
+            string returnQuery = BaseMethods.GetDataFromDb("select count(*) from workernumactual");
+            if (returnQuery == string.Empty)
+            {
+                Assert.Fail();
+            }
+            return returnQuery;
+        }
 
-			string returnQuery = BaseMethods.GetDataFromDb("select count(*) from workernumactual");
-			if (returnQuery == string.Empty)
-			{
-				Assert.Fail();
-			}
-			return returnQuery;
-		}
+        public static string GetPosition(string dbValue) //get Position
+        {
+            string returnQuery = BaseMethods.GetDataFromDb("select job_name from jobnum where job_name = '" + dbValue + "'");
+            if (returnQuery == string.Empty)
+            {
+                Assert.Fail();
+            }
+            return returnQuery;
+        }
 
-		public static string GetPosition(string dbValue) //get Position
-		{
-			string returnQuery = BaseMethods.GetDataFromDb("select job_name from jobnum where job_name = '" + dbValue + "'");
-			if (returnQuery == string.Empty)
-			{
-				Assert.Fail();
-			}
-			return returnQuery;
-		}
+        public static string GetDeletedPosition(string dbValue) //get deleted Position
+        {
+            string returnQuery = BaseMethods.GetDataFromDb("select job_name from jobnum where job_name = '" + dbValue + "'");
+            return returnQuery;
+        }
 
-		public static string GetDeletedPosition(string dbValue) //get deleted Position
-		{
-			string returnQuery = BaseMethods.GetDataFromDb("select job_name from jobnum where job_name = '" + dbValue + "'");
-			return returnQuery;
-		}
+        public static string GetUserName(string dbValue) //get name of User Name
+        {
+            BaseMethods.ExecuteSqlQuery("username.sql");
 
-		public static string GetUserName(string dbValue) //get name of User Name
-		{
-			BaseMethods.ExecuteSqlQuery("username.sql");
+            string returnQuery = BaseMethods.GetDataFromDb("select value from username where value = '" + dbValue + "'");
 
-			string returnQuery = BaseMethods.GetDataFromDb("select value from username where value = '" + dbValue + "'");
+            if (returnQuery == string.Empty)
+            {
+                Assert.Fail();
+            }
+            return returnQuery;
+        }
 
-			if (returnQuery == string.Empty)
-			{
-				Assert.Fail();
-			}
-			return returnQuery;
-		}
+        public static string GetUserId(string dbValue) //get name of User Name
+        {
+            BaseMethods.ExecuteSqlQuery("username.sql");
 
-		public static string GetUserId(string dbValue) //get name of User Name
-		{
-			BaseMethods.ExecuteSqlQuery("username.sql");
+            string returnQuery = BaseMethods.GetDataFromDb("select obj_id from username where obj_id = '" + dbValue + "'");
 
-			string returnQuery = BaseMethods.GetDataFromDb("select obj_id from username where obj_id = '" + dbValue + "'");
+            if (returnQuery == string.Empty)
+            {
+                Assert.Fail();
+            }
+            return returnQuery;
+        }
 
-			if (returnQuery == string.Empty)
-			{
-				Assert.Fail();
-			}
-			return returnQuery;
-		}
+        public static string GetLog(string dbValue) //get name of User Name
+        {
+            string returnQuery = BaseMethods.GetDataFromDb("select id from restapi.log where id = '" + dbValue + "'");
 
-		public static string GetLog(string dbValue) //get name of User Name
-		{
-			string returnQuery = BaseMethods.GetDataFromDb("select id from restapi.log where id = '" + dbValue + "'");
+            if (returnQuery == string.Empty)
+            {
+                Assert.Fail();
+            }
+            return returnQuery;
+        }
 
-			if (returnQuery == string.Empty)
-			{
-				Assert.Fail();
-			}
-			return returnQuery;
-		}
+        public static string GetDevice(string dbValue) //get name of Device
+        {
+            string returnQuery = BaseMethods.GetDataFromDb("select type from terminalparam where type = '" + dbValue + "'");
+            if (returnQuery == string.Empty)
+            {
+                Assert.Fail();
+            }
+            return returnQuery;
+        }
 
-		public static string GetDevice(string dbValue) //get name of Device
-		{
-			string returnQuery = BaseMethods.GetDataFromDb("select type from terminalparam where type = '" + dbValue + "'");
-			if (returnQuery == string.Empty)
-			{
-				Assert.Fail();
-			}
-			return returnQuery;
-		}
+        public static string GetCheckpoint(string dbValue) //get name of Device
+        {
+            string returnQuery = BaseMethods.GetDataFromDb("select name from restapi.checkpoint where name = '" + dbValue + "'");
+            if (returnQuery == string.Empty)
+            {
+                Assert.Fail();
+            }
+            return returnQuery;
+        }
 
-		public static string GetCheckpoint(string dbValue) //get name of Device
-		{
-			string returnQuery = BaseMethods.GetDataFromDb("select name from restapi.checkpoint where name = '" + dbValue + "'");
-			if (returnQuery == string.Empty)
-			{
-				Assert.Fail();
-			}
-			return returnQuery;
-		}
-
-		public static string GetReport(string dbValue) //get name of Report
-		{
-			string returnQuery = BaseMethods.GetDataFromDb("select name from reports_hidden_status where name = '" + dbValue + "'");
-			if (returnQuery == string.Empty)
-			{
-				Assert.Fail();
-			}
-			return returnQuery;
-		}
-		*/
+        public static string GetReport(string dbValue) //get name of Report
+        {
+            string returnQuery = BaseMethods.GetDataFromDb("select name from reports_hidden_status where name = '" + dbValue + "'");
+            if (returnQuery == string.Empty)
+            {
+                Assert.Fail();
+            }
+            return returnQuery;
+        }
+        */
 
 		/*
 			int i = 0;
@@ -382,7 +400,7 @@ namespace Rest_api_test_xml_1._1
 			return returnQuery;
 		}
 		 */
-    #endregion рскоментировать чтобы использовать далее по отдельности
+		#endregion рскоментировать чтобы использовать далее по отдельности
 
 	}
 }
